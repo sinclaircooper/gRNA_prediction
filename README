@@ -1,0 +1,94 @@
+--------------------------------------------------------------------------
+guide RNA prediction pipeline from WGS short read data
+--------------------------------------------------------------------------
+
+Requirements:
+	- a Unix environment with grep etc. available 
+	- Python 2.7 or higher
+	- EMBOSS bioinformatics package; including WATER (http://emboss.sourceforge.net/download/)
+	- pullseq (https://github.com/bcthomas/pullseq)
+	
+	- JBrowse (optional) (http://jbrowse.org/)
+	- gnu paralell
+
+--------------------------------------------------------------------------
+This is a suite of scripts for predicting guide RNAs from Illumnina type 
+short read data. This pipeline is not prescriptive; it is possible to get the same results by doing
+things in a different order/using different programmes that do the same thing. 
+
+This is a multi-step and modular process and is designed so that the output can be viewed
+in JBrowse genome viewer; the final output file is a modified GFF3 file and 
+can easily be parsed into any desired format to suit your visualisation/
+analysis requirements i.e. GBrowse/Artemis. 
+
+As this is process is designed to analysis mitochondrial reads from Kinetoplastids
+any WGS data can be first mapped to a reference genome (if one is available) 
+and reads that map can be discarded. This step is optional but will reduce computation 
+time significantly.
+
+Duplicate reads can also be collapsed and fasta headers must be replaced so that
+they are in the format >SEQ_ID.
+
+Low complexity reads can also be removed at this stage (i.e. reads with long homo-nucleotide tracts).
+A script is provided to remove reads which are more than 80% T/N/C. Poly N tracts must be removed. 
+
+As a general rule fasta sequences are easier to handle as one line; a script has been provided to convert 
+multi-line fastas to 1 line. 
+
+The majority of these steps can easily be paralellised using GNU paralell 
+
+PIPELINE OVERVIEW
+--------------------------------------------------------------------------
+STEP 1: Smith-Waterman alignments of collapsed and renamed reads to Pre-Edited mRNA.
+
+
+This aligns each read to the pre-edited mRNA using a the modified alignment matrix (provided).
+Generates a file with reads that match to the pre-edited mRNA labelled with a '#'.
+a)
+water_to_PreEdited.sh QUERIES.fa | filter_pre_edited.py | grep -v '#' | awk '{print $1}' > do_not_match_pre_ed.hdr 
+
+These reads can be discarded and the headers for the reads that do not match extracted.  
+b)
+pullseq -i QUERIES.fa -n do_not_match_pre_ed.hdr | fasta_1line > no_pre_ed.fa 
+
+-----------------------------------------------------------------------------
+STEP 2: Smith-Waterman alignments of reads that do not align to pre-edited maxicircles
+to the edited sequences. 
+
+water_to_EDITED.sh no_pre_ed.fa | filter_edited.py | grep -v '#|@' > match_edited.gff
+
+------------------------------------------------------------------------------
+STEP 3: Permutation test of reads that align to edited maxicircle mRNA 
+  
+Reads that matched well to the edited maxicircle mRNA must be tested for statistical significance
+
+a) first extract the reads that match the edited maxicircle
+cat match_edited.gff | sed 's/=/ /g' | sed 's/;/ /g' | awk '{print $10}' > match_edited.hdr 
+
+pullseq -i QUERIES.fa -n match_edited.hdr | fasta_1line > match_edited.fa 
+
+b)subject these reads to a permutation test
+
+cat match_edited.fa | SW_permutations.py | grep -v '#' | awk '{print $1}' > passed_P_test.hdr
+
+cat match_edited.gff | grep -f passed_P_test.hdr > passed_P_test.gff 
+
+passed_P_test.gff is the final output file and contains the alignemt (in a format ready for parsing into html 
+for Jbrowse). Do with this what you will; stats about alignemnt score are easily extracted as well as mapping position and in conjunction with a map of edited sites this is quite a useful file. 
+
+
+-----------------------------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+----------------------------------------------------------------------------------------------------------------
+
+Files included with a short description of their purpose/useage. 
+
+
+
+
+
+
+
+      
+ 
+
