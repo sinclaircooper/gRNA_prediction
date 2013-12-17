@@ -1,0 +1,6 @@
+#!/bin/sh
+
+#reads a multi-line fasta file from stdin and prints out a single line version 
+
+tr ' ' '_' |awk '/^>/&&NR>1{print "";}{ printf "%s",/^>/ ? $0" ":$0 }' | tr ' ' '\n' 
+
