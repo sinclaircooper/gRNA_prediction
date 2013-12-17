@@ -63,6 +63,7 @@ STEP 3: Permutation test of reads that align to edited maxicircle mRNA
 Reads that matched well to the edited maxicircle mRNA must be tested for statistical significance
 
 a) first extract the reads that match the edited maxicircle
+
 cat match_edited.gff | sed 's/=/ /g' | sed 's/;/ /g' | awk '{print $10}' > match_edited.hdr 
 
 pullseq -i QUERIES.fa -n match_edited.hdr | fasta_1line > match_edited.fa 
