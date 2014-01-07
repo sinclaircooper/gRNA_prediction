@@ -4,7 +4,7 @@
 
 ############################################################
 #THE IDEA IS TO CALCULATE AND FILTER IF A 'READ' IS GREATER THAN 80% C OR t
-#will alos filter out any reads that are more than 50% N
+#will also filter out any reads that are more than 50% N
 ###################################################################
 
 import sys 

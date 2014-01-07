@@ -3,7 +3,7 @@
 import sys 
 import re
 
-#The purpose pf this script is to check measure identity 
+#reads alignment info from water_to_PreEdited.sh and filters out reads that are a good match to the pre_edited DB
 
 
 #lists to store things in later 

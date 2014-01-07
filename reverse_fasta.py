@@ -1,6 +1,9 @@
 #! /usr/bin/python
 import sys
 
+#takes a fasta sequence and reverses it 
+#reads from sdtin 
+
 header_list = []
 sequence_list = []
 

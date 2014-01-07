@@ -1,5 +1,8 @@
 #! /usr/bin/python
 
+#reads alignment output from water_to_Edited.sh and filters out low quality alignments
+#the output is a modified gff3 ready for viewing in JBrowse
+
 import sys 
 #import regex
 import re	
@@ -20,7 +23,7 @@ def complement(sequence):
 	complement = {'A':'T','C':'G','G':'C','T':'A'}
 	return "".join([complement.get(nt.upper(), '') for nt in sequence])
 
-#replace ts with us 
+#replace Ts with Us 
 def t_2_u(sequence):
 	sequence2 = sequence.replace('t', 'u') 
 	return sequence2.replace('T','U')	

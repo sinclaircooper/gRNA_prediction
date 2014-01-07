@@ -1,17 +1,7 @@
 #!/bin/bash
 
-#this is a script for batch processing all of the potential reads from the rua_1 cutting script
+#smith-waterman alignments for reads to edited maxicircle genes
 
-
-FILES=$1/*
-for f in $FILES
-do
-  echo "#doing alignment for $f"
-# take action on each file. $f store current file name
-  
-  cat "$f" | water -filter yes -bsequence /home/sinclair/grna_extraction/edited_mrna.fa -datafile /home/sinclair/grna_extraction/matrix.txt -gapopen 100 -gapextend 3 -awidth3 100 -aformat pair	
-
-done
-#run this script on it's own and you will just get the alignments 
-#grep 'Score' will return the score 
-#grep score and grna?
+while read line; do read second
+    printf "%b\n" "$line" "$second"|water -filter yes -bsequence /home/sinclaircooper/grna_extraction/edited_dna_1seq.fa -datafile /home/sinclaircooper/t_shell/t_matrix.txt -gapopen 100 -gapextend 10 -awidth3 200 -aformat pair
+done < $1 

@@ -1,5 +1,9 @@
 #! /usr/bin/python 
 
+#take a read and perform 1000 smith-waterman alignments to test the  significance of a potential gRNA match
+#for each read generate a distribution for the randomised alignments, if the real alignment falls outwith this 
+#distribution then it is significant and likely to be biologically relevant 
+
 import string
 #import sys
 import re  
