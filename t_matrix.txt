@@ -1,0 +1,9 @@
+#modified alignment matrix for smith-waterman alignments of gRNAs to 
+#either edited/pre-edited maxicircle sequences 
+#database on top line  
+      A     C     G    T
+A    10   -10    10  -10 
+C   -10    10   -10   10  
+G   -10   -10    10  -10 
+T   -10   -10   -10   10
+
